@@ -18,9 +18,14 @@ https://documenter.getpostman.com/view/23485427/2s9Y5YShoD
 
 ![Entity Relationship Diagram (ERD)](docs/erd.png)
 
-### Deployment
 
+## 🌠 Deployment
+
+### Deployed URL
 https://online-store.hilmy.dev
+
+### Docker Registry URL
+https://hub.docker.com/r/mnaufalhilmym/online-store
 
 
 ## ⚡️ Development Setup
