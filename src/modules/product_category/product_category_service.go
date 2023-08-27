@@ -3,6 +3,7 @@ package productcategory
 import (
 	"github.com/google/uuid"
 	"hilmy.dev/store/src/libs/db/pg"
+	p "hilmy.dev/store/src/modules/product/product_entity"
 	pc "hilmy.dev/store/src/modules/product_category/product_category_entity"
 )
 
@@ -94,5 +95,17 @@ func (*Module) deleteProductCategoryService(id *uuid.UUID) error {
 		Model: pg.Model{
 			ID: id,
 		},
+	})
+}
+
+func (*Module) getProductCountByProductCategoryID(id *uuid.UUID) (*int64, error) {
+	return p.ProductRepository().Count(&pg.CountOptions{
+		Where: &[]pg.Where{
+			{
+				Query: "category_id = ?",
+				Args:  []interface{}{id},
+			},
+		},
+		IsUnscoped: true,
 	})
 }
