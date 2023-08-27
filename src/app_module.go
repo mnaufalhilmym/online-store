@@ -17,6 +17,7 @@ import (
 	"hilmy.dev/store/src/modules/product"
 	productcategory "hilmy.dev/store/src/modules/product_category"
 	shoppingcart "hilmy.dev/store/src/modules/shopping_cart"
+	"hilmy.dev/store/src/modules/transaction"
 )
 
 type module struct {
@@ -120,6 +121,11 @@ func (m *module) load() {
 	})
 
 	shoppingcart.Load(&shoppingcart.Module{
+		App: m.app,
+		DB:  pgDB,
+	})
+
+	transaction.Load(&transaction.Module{
 		App: m.app,
 		DB:  pgDB,
 	})
