@@ -1,0 +1,47 @@
+services:
+  store-pg:
+    container_name: store-pg
+    image: docker.io/postgres:alpine
+    restart: unless-stopped
+    networks:
+      - store-network
+    env_file:
+      - .env.store
+    environment:
+      TZ: Asia/Jakarta
+    volumes:
+      - ./volume/store-pg:/var/lib/postgresql/data:Z
+  
+  store-mongo:
+    container_name: store-mongo
+    image: docker.io/mongo
+    restart: unless-stopped
+    networks:
+      - store-network
+    env_file:
+      - .env.store
+    environment:
+      TZ: Asia/Jakarta
+    volumes:
+      - ./volume/store-mongo:/data/db:Z
+
+  store-be:
+    container_name: store-be
+    image: store:distroless-static-debian11
+    restart: unless-stopped
+    networks:
+      - store-network
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env.store
+    environment:
+      TZ: Asia/Jakarta
+    depends_on:
+      - store-pg
+      - store-mongo
+
+
+networks:
+  store-network:
+  
