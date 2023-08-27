@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/gofiber/fiber/v2"
-	"hilmy.dev/store/src/contract"
+	"hilmy.dev/store/src/contracts"
 	"hilmy.dev/store/src/libs/db/pg"
 	"hilmy.dev/store/src/libs/parser"
 	acc "hilmy.dev/store/src/modules/account/account_entity"
@@ -25,8 +25,8 @@ func (m *Module) getProductCategoryList(c *fiber.Ctx) error {
 	query := new(getProductCategoryListReqQuery)
 	if err := parser.ParseReqQuery(c, query); err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), false)
-		return c.Status(fiber.StatusBadRequest).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusBadRequest).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrBadRequest.Error(),
 				Message: err.Error(),
 			},
@@ -44,8 +44,8 @@ func (m *Module) getProductCategoryList(c *fiber.Ctx) error {
 	})
 	if err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), true)
-		return c.Status(fiber.StatusInternalServerError).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusInternalServerError).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrInternalServerError.Error(),
 				Message: err.Error(),
 			},
@@ -53,8 +53,8 @@ func (m *Module) getProductCategoryList(c *fiber.Ctx) error {
 	}
 
 	log.SaveLogService(c.OriginalURL(), "Ok", false)
-	return c.Status(fiber.StatusOK).JSON(&contract.Response{
-		Pagination: &contract.Pagination{
+	return c.Status(fiber.StatusOK).JSON(&contracts.Response{
+		Pagination: &contracts.Pagination{
 			Limit: page.limit,
 			Count: page.count,
 			Page:  query.Page,
@@ -68,8 +68,8 @@ func (m *Module) getProductCategoryDetail(c *fiber.Ctx) error {
 	param := new(getProductCategoryDetailReqParam)
 	if err := parser.ParseReqParam(c, param); err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), false)
-		return c.Status(fiber.StatusBadRequest).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusBadRequest).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrBadRequest.Error(),
 				Message: err.Error(),
 			},
@@ -87,8 +87,8 @@ func (m *Module) getProductCategoryDetail(c *fiber.Ctx) error {
 			printStack = false
 		}
 		log.SaveLogService(c.OriginalURL(), err.Error(), printStack)
-		return c.Status(status).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(status).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  statusString,
 				Message: err.Error(),
 			},
@@ -96,7 +96,7 @@ func (m *Module) getProductCategoryDetail(c *fiber.Ctx) error {
 	}
 
 	log.SaveLogService(c.OriginalURL(), "Ok", false)
-	return c.Status(fiber.StatusOK).JSON(&contract.Response{
+	return c.Status(fiber.StatusOK).JSON(&contracts.Response{
 		Data: productCategoryDetailData,
 	})
 }
@@ -105,8 +105,8 @@ func (m *Module) addProductCategory(c *fiber.Ctx) error {
 	req := new(addProductCategoryReq)
 	if err := parser.ParseReqBody(c, req); err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), false)
-		return c.Status(fiber.StatusBadRequest).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusBadRequest).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrBadRequest.Error(),
 				Message: err.Error(),
 			},
@@ -118,8 +118,8 @@ func (m *Module) addProductCategory(c *fiber.Ctx) error {
 	})
 	if err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), true)
-		return c.Status(fiber.StatusInternalServerError).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusInternalServerError).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrInternalServerError.Error(),
 				Message: err.Error(),
 			},
@@ -127,7 +127,7 @@ func (m *Module) addProductCategory(c *fiber.Ctx) error {
 	}
 
 	log.SaveLogService(c.OriginalURL(), "Ok", false)
-	return c.Status(fiber.StatusCreated).JSON(&contract.Response{
+	return c.Status(fiber.StatusCreated).JSON(&contracts.Response{
 		Data: productCategoryDetailData,
 	})
 }
@@ -136,8 +136,8 @@ func (m *Module) updateProductCategory(c *fiber.Ctx) error {
 	param := new(updateProductCategoryReqParam)
 	if err := parser.ParseReqParam(c, param); err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), false)
-		return c.Status(fiber.StatusBadRequest).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusBadRequest).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrBadRequest.Error(),
 				Message: err.Error(),
 			},
@@ -147,8 +147,8 @@ func (m *Module) updateProductCategory(c *fiber.Ctx) error {
 	req := new(updateProductCategoryReq)
 	if err := parser.ParseReqBody(c, req); err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), false)
-		return c.Status(fiber.StatusBadRequest).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusBadRequest).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrBadRequest.Error(),
 				Message: err.Error(),
 			},
@@ -168,8 +168,8 @@ func (m *Module) updateProductCategory(c *fiber.Ctx) error {
 			printStack = false
 		}
 		log.SaveLogService(c.OriginalURL(), err.Error(), printStack)
-		return c.Status(status).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(status).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  statusString,
 				Message: err.Error(),
 			},
@@ -177,7 +177,7 @@ func (m *Module) updateProductCategory(c *fiber.Ctx) error {
 	}
 
 	log.SaveLogService(c.OriginalURL(), "Ok", false)
-	return c.Status(fiber.StatusOK).JSON(&contract.Response{
+	return c.Status(fiber.StatusOK).JSON(&contracts.Response{
 		Data: productCategoryDetailData,
 	})
 }
@@ -186,8 +186,8 @@ func (m *Module) deleteProductCategory(c *fiber.Ctx) error {
 	param := new(deleteProductCategoryReqParam)
 	if err := parser.ParseReqParam(c, param); err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), false)
-		return c.Status(fiber.StatusBadRequest).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusBadRequest).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrBadRequest.Error(),
 				Message: err.Error(),
 			},
@@ -197,8 +197,8 @@ func (m *Module) deleteProductCategory(c *fiber.Ctx) error {
 	count, err := m.getProductCountByProductCategoryID(param.ID)
 	if err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), true)
-		return c.Status(fiber.StatusInternalServerError).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusInternalServerError).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrInternalServerError.Error(),
 				Message: err.Error(),
 			},
@@ -207,8 +207,8 @@ func (m *Module) deleteProductCategory(c *fiber.Ctx) error {
 	if *count > 0 {
 		err := errors.New("failed to delete the category because there are items (or deleted items) with that category")
 		log.SaveLogService(c.OriginalURL(), err.Error(), false)
-		return c.Status(fiber.StatusBadRequest).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusBadRequest).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrBadRequest.Error(),
 				Message: err.Error(),
 			},
@@ -225,8 +225,8 @@ func (m *Module) deleteProductCategory(c *fiber.Ctx) error {
 			printStack = false
 		}
 		log.SaveLogService(c.OriginalURL(), err.Error(), printStack)
-		return c.Status(status).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(status).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  statusString,
 				Message: err.Error(),
 			},
@@ -234,7 +234,7 @@ func (m *Module) deleteProductCategory(c *fiber.Ctx) error {
 	}
 
 	log.SaveLogService(c.OriginalURL(), "Ok", false)
-	return c.Status(fiber.StatusOK).JSON(&contract.Response{
+	return c.Status(fiber.StatusOK).JSON(&contracts.Response{
 		Data: param.ID,
 	})
 }

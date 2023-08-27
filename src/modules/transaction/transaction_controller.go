@@ -6,7 +6,7 @@ import (
 
 	"github.com/bytedance/sonic"
 	"github.com/gofiber/fiber/v2"
-	"hilmy.dev/store/src/contract"
+	"hilmy.dev/store/src/contracts"
 	"hilmy.dev/store/src/libs/db/pg"
 	"hilmy.dev/store/src/libs/parser"
 	acc "hilmy.dev/store/src/modules/account/account_entity"
@@ -29,8 +29,8 @@ func (m *Module) getTransactionList(c *fiber.Ctx) error {
 	token := new(a.JWTPayload)
 	if err := parser.ParseReqBearerToken(c, token); err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), false)
-		return c.Status(fiber.StatusUnauthorized).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusUnauthorized).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrUnauthorized.Error(),
 				Message: err.Error(),
 			},
@@ -40,8 +40,8 @@ func (m *Module) getTransactionList(c *fiber.Ctx) error {
 	query := new(getTransactionListReqQuery)
 	if err := parser.ParseReqQuery(c, query); err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), false)
-		return c.Status(fiber.StatusBadRequest).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusBadRequest).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrBadRequest.Error(),
 				Message: err.Error(),
 			},
@@ -62,8 +62,8 @@ func (m *Module) getTransactionList(c *fiber.Ctx) error {
 	})
 	if err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), true)
-		return c.Status(fiber.StatusInternalServerError).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusInternalServerError).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrInternalServerError.Error(),
 				Message: err.Error(),
 			},
@@ -71,8 +71,8 @@ func (m *Module) getTransactionList(c *fiber.Ctx) error {
 	}
 
 	log.SaveLogService(c.OriginalURL(), "Ok", false)
-	return c.Status(fiber.StatusOK).JSON(&contract.Response{
-		Pagination: &contract.Pagination{
+	return c.Status(fiber.StatusOK).JSON(&contracts.Response{
+		Pagination: &contracts.Pagination{
 			Limit: page.limit,
 			Count: page.count,
 			Page:  query.Page,
@@ -86,8 +86,8 @@ func (m *Module) getTransactionDetail(c *fiber.Ctx) error {
 	token := new(a.JWTPayload)
 	if err := parser.ParseReqBearerToken(c, token); err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), false)
-		return c.Status(fiber.StatusUnauthorized).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusUnauthorized).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrUnauthorized.Error(),
 				Message: err.Error(),
 			},
@@ -97,8 +97,8 @@ func (m *Module) getTransactionDetail(c *fiber.Ctx) error {
 	param := new(getTransactionDetailReqParam)
 	if err := parser.ParseReqParam(c, param); err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), false)
-		return c.Status(fiber.StatusBadRequest).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusBadRequest).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrBadRequest.Error(),
 				Message: err.Error(),
 			},
@@ -116,8 +116,8 @@ func (m *Module) getTransactionDetail(c *fiber.Ctx) error {
 			printStack = false
 		}
 		log.SaveLogService(c.OriginalURL(), err.Error(), printStack)
-		return c.Status(status).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(status).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  statusString,
 				Message: err.Error(),
 			},
@@ -125,7 +125,7 @@ func (m *Module) getTransactionDetail(c *fiber.Ctx) error {
 	}
 
 	log.SaveLogService(c.OriginalURL(), "Ok", false)
-	return c.Status(fiber.StatusOK).JSON(&contract.Response{
+	return c.Status(fiber.StatusOK).JSON(&contracts.Response{
 		Data: transactionDetailData,
 	})
 }
@@ -134,8 +134,8 @@ func (m *Module) addTransaction(c *fiber.Ctx) error {
 	token := new(a.JWTPayload)
 	if err := parser.ParseReqBearerToken(c, token); err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), false)
-		return c.Status(fiber.StatusUnauthorized).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusUnauthorized).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrUnauthorized.Error(),
 				Message: err.Error(),
 			},
@@ -145,8 +145,8 @@ func (m *Module) addTransaction(c *fiber.Ctx) error {
 	req := new(addTransactionReq)
 	if err := parser.ParseReqBody(c, req); err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), false)
-		return c.Status(fiber.StatusBadRequest).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusBadRequest).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrBadRequest.Error(),
 				Message: err.Error(),
 			},
@@ -167,8 +167,8 @@ func (m *Module) addTransaction(c *fiber.Ctx) error {
 				printStack = false
 			}
 			log.SaveLogService(c.OriginalURL(), err.Error(), printStack)
-			return c.Status(status).JSON(&contract.Response{
-				Error: &contract.Error{
+			return c.Status(status).JSON(&contracts.Response{
+				Error: &contracts.Error{
 					Status:  statusString,
 					Message: err.Error(),
 				},
@@ -179,8 +179,8 @@ func (m *Module) addTransaction(c *fiber.Ctx) error {
 			if pg.IsErrRecordNotFound(err) {
 				if err := m.deleteShoppingCartItemDetailService((*req.ShoppingCartItemIDs)[i]); err != nil {
 					log.SaveLogService(c.OriginalURL(), err.Error(), true)
-					return c.Status(fiber.StatusInternalServerError).JSON(&contract.Response{
-						Error: &contract.Error{
+					return c.Status(fiber.StatusInternalServerError).JSON(&contracts.Response{
+						Error: &contracts.Error{
 							Status:  fiber.ErrInternalServerError.Error(),
 							Message: err.Error(),
 						},
@@ -188,8 +188,8 @@ func (m *Module) addTransaction(c *fiber.Ctx) error {
 				}
 			}
 			log.SaveLogService(c.OriginalURL(), err.Error(), true)
-			return c.Status(fiber.StatusInternalServerError).JSON(&contract.Response{
-				Error: &contract.Error{
+			return c.Status(fiber.StatusInternalServerError).JSON(&contracts.Response{
+				Error: &contracts.Error{
 					Status:  fiber.ErrInternalServerError.Error(),
 					Message: err.Error(),
 				},
@@ -202,8 +202,8 @@ func (m *Module) addTransaction(c *fiber.Ctx) error {
 	dataBytes, err := sonic.Marshal(shoppingCartItemListData)
 	if err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), true)
-		return c.Status(fiber.StatusInternalServerError).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusInternalServerError).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrInternalServerError.Error(),
 				Message: err.Error(),
 			},
@@ -219,8 +219,8 @@ func (m *Module) addTransaction(c *fiber.Ctx) error {
 	}
 	if err := m.addTransactionService(&transactionDetailData, req.ShoppingCartItemIDs); err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), true)
-		return c.Status(fiber.StatusInternalServerError).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusInternalServerError).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrInternalServerError.Error(),
 				Message: err.Error(),
 			},
@@ -228,7 +228,7 @@ func (m *Module) addTransaction(c *fiber.Ctx) error {
 	}
 
 	log.SaveLogService(c.OriginalURL(), "Ok", false)
-	return c.Status(fiber.StatusCreated).JSON(&contract.Response{
+	return c.Status(fiber.StatusCreated).JSON(&contracts.Response{
 		Data: &transactionDetailData,
 	})
 }
@@ -237,8 +237,8 @@ func (m *Module) payTransaction(c *fiber.Ctx) error {
 	token := new(a.JWTPayload)
 	if err := parser.ParseReqBearerToken(c, token); err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), false)
-		return c.Status(fiber.StatusUnauthorized).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusUnauthorized).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrUnauthorized.Error(),
 				Message: err.Error(),
 			},
@@ -248,8 +248,8 @@ func (m *Module) payTransaction(c *fiber.Ctx) error {
 	param := new(payTransactionReqParam)
 	if err := parser.ParseReqParam(c, param); err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), false)
-		return c.Status(fiber.StatusBadRequest).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusBadRequest).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrBadRequest.Error(),
 				Message: err.Error(),
 			},
@@ -267,8 +267,8 @@ func (m *Module) payTransaction(c *fiber.Ctx) error {
 			printStack = false
 		}
 		log.SaveLogService(c.OriginalURL(), err.Error(), printStack)
-		return c.Status(status).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(status).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  statusString,
 				Message: err.Error(),
 			},
@@ -277,8 +277,8 @@ func (m *Module) payTransaction(c *fiber.Ctx) error {
 	if *transactionDetailData.Status != t.STATUS_WAITING_PAYMENT {
 		err := fmt.Errorf("cannot pay for a transaction that is not in %s status", t.STATUS_WAITING_PAYMENT)
 		log.SaveLogService(c.OriginalURL(), err.Error(), false)
-		return c.Status(fiber.StatusBadRequest).JSON(contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusBadRequest).JSON(contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrBadRequest.Error(),
 				Message: err.Error(),
 			},
@@ -296,8 +296,8 @@ func (m *Module) payTransaction(c *fiber.Ctx) error {
 			printStack = false
 		}
 		log.SaveLogService(c.OriginalURL(), err.Error(), printStack)
-		return c.Status(status).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(status).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  statusString,
 				Message: err.Error(),
 			},
@@ -307,8 +307,8 @@ func (m *Module) payTransaction(c *fiber.Ctx) error {
 	if *balanceDetailData.Amount < *transactionDetailData.Price {
 		err := errors.New("insufficient balance")
 		log.SaveLogService(c.OriginalURL(), err.Error(), false)
-		return c.Status(fiber.StatusBadRequest).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusBadRequest).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrBadRequest.Error(),
 				Message: err.Error(),
 			},
@@ -320,8 +320,8 @@ func (m *Module) payTransaction(c *fiber.Ctx) error {
 	*balanceDetailData.Amount -= *transactionDetailData.Price
 	if err := m.payTransactionService(token.ID, transactionDetailData.ID, transactionDetailData, balanceDetailData.ID, balanceDetailData); err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), true)
-		return c.Status(fiber.StatusInternalServerError).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusInternalServerError).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrInternalServerError.Error(),
 				Message: err.Error(),
 			},
@@ -329,7 +329,7 @@ func (m *Module) payTransaction(c *fiber.Ctx) error {
 	}
 
 	log.SaveLogService(c.OriginalURL(), "Ok", false)
-	return c.Status(fiber.StatusOK).JSON(&contract.Response{
+	return c.Status(fiber.StatusOK).JSON(&contracts.Response{
 		Data: transactionDetailData,
 	})
 }
@@ -338,8 +338,8 @@ func (m *Module) cancelTransaction(c *fiber.Ctx) error {
 	token := new(a.JWTPayload)
 	if err := parser.ParseReqBearerToken(c, token); err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), false)
-		return c.Status(fiber.StatusUnauthorized).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusUnauthorized).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrUnauthorized.Error(),
 				Message: err.Error(),
 			},
@@ -349,8 +349,8 @@ func (m *Module) cancelTransaction(c *fiber.Ctx) error {
 	param := new(cancelTransactionReqParam)
 	if err := parser.ParseReqParam(c, param); err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), false)
-		return c.Status(fiber.StatusBadRequest).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusBadRequest).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrBadRequest.Error(),
 				Message: err.Error(),
 			},
@@ -368,8 +368,8 @@ func (m *Module) cancelTransaction(c *fiber.Ctx) error {
 			printStack = false
 		}
 		log.SaveLogService(c.OriginalURL(), err.Error(), printStack)
-		return c.Status(status).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(status).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  statusString,
 				Message: err.Error(),
 			},
@@ -379,8 +379,8 @@ func (m *Module) cancelTransaction(c *fiber.Ctx) error {
 	if *transactionDetailData.Status == t.STATUS_COMPLETED {
 		err := errors.New("cannot cancel a transaction that has already been completed")
 		log.SaveLogService(c.OriginalURL(), err.Error(), false)
-		return c.Status(fiber.StatusBadRequest).JSON(contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusBadRequest).JSON(contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrBadRequest.Error(),
 				Message: err.Error(),
 			},
@@ -390,8 +390,8 @@ func (m *Module) cancelTransaction(c *fiber.Ctx) error {
 	transactionDetailData, err = m.cancelTransactionService(token.ID, param.ID)
 	if err != nil {
 		log.SaveLogService(c.OriginalURL(), err.Error(), true)
-		return c.Status(fiber.StatusInternalServerError).JSON(&contract.Response{
-			Error: &contract.Error{
+		return c.Status(fiber.StatusInternalServerError).JSON(&contracts.Response{
+			Error: &contracts.Error{
 				Status:  fiber.ErrInternalServerError.Error(),
 				Message: err.Error(),
 			},
@@ -399,7 +399,7 @@ func (m *Module) cancelTransaction(c *fiber.Ctx) error {
 	}
 
 	log.SaveLogService(c.OriginalURL(), "Ok", false)
-	return c.Status(fiber.StatusOK).JSON(&contract.Response{
+	return c.Status(fiber.StatusOK).JSON(&contracts.Response{
 		Data: transactionDetailData,
 	})
 }

@@ -11,7 +11,7 @@ import (
 	fiberlogger "github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"hilmy.dev/store/src/constants"
-	"hilmy.dev/store/src/contract"
+	"hilmy.dev/store/src/contracts"
 	"hilmy.dev/store/src/libs/env"
 	"hilmy.dev/store/src/libs/gracefulshutdown"
 	applogger "hilmy.dev/store/src/libs/logger"
@@ -42,15 +42,15 @@ func main() {
 					statusString = fiberError.Error()
 				}
 				logger.Error(err, &applogger.Options{IsPrintStack: false})
-				return c.Status(status).JSON(&contract.Response{
-					Error: &contract.Error{
+				return c.Status(status).JSON(&contracts.Response{
+					Error: &contracts.Error{
 						Status:  statusString,
 						Message: err.Error(),
 					},
 				})
 			}
-			return c.Status(status).JSON(&contract.Response{
-				Error: &contract.Error{
+			return c.Status(status).JSON(&contracts.Response{
+				Error: &contracts.Error{
 					Status:  statusString,
 					Message: "unexpected error occurred",
 				},
