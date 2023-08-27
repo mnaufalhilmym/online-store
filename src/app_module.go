@@ -14,6 +14,7 @@ import (
 	"hilmy.dev/store/src/modules/auth"
 	"hilmy.dev/store/src/modules/balance"
 	"hilmy.dev/store/src/modules/log"
+	"hilmy.dev/store/src/modules/product"
 	productcategory "hilmy.dev/store/src/modules/product_category"
 )
 
@@ -108,6 +109,11 @@ func (m *module) load() {
 	})
 
 	productcategory.Load(&productcategory.Module{
+		App: m.app,
+		DB:  pgDB,
+	})
+
+	product.Load(&product.Module{
 		App: m.app,
 		DB:  pgDB,
 	})
