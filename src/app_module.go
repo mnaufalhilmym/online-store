@@ -14,6 +14,7 @@ import (
 	"hilmy.dev/store/src/modules/auth"
 	"hilmy.dev/store/src/modules/balance"
 	"hilmy.dev/store/src/modules/log"
+	productcategory "hilmy.dev/store/src/modules/product_category"
 )
 
 type module struct {
@@ -102,6 +103,11 @@ func (m *module) load() {
 	})
 
 	balance.Load(&balance.Module{
+		App: m.app,
+		DB:  pgDB,
+	})
+
+	productcategory.Load(&productcategory.Module{
 		App: m.app,
 		DB:  pgDB,
 	})
