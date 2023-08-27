@@ -1,4 +1,4 @@
-package contract
+package contracts
 
 type Response struct {
 	Error      *Error      `json:"error,omitempty"`
