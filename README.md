@@ -128,7 +128,7 @@ Before contributing, consider the following guidelines:
 - In your forked repository, make your changes in a new git branch:
 
   ```shell
-  git checkout -b my-fix-branch main
+  git checkout -b fix/my-fix-branch main
   ```
 
 - Create your patch.
@@ -145,4 +145,4 @@ Before contributing, consider the following guidelines:
   git push origin fix/my-fix-branch
   ```
 
-- In GitHub, send a pull request to `online-store:mail`.
+- In GitHub, send a pull request to `online-store:main`.
