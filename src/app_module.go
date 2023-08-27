@@ -12,6 +12,7 @@ import (
 	"hilmy.dev/store/src/libs/jwx/jwt"
 	"hilmy.dev/store/src/modules/account"
 	"hilmy.dev/store/src/modules/auth"
+	"hilmy.dev/store/src/modules/balance"
 	"hilmy.dev/store/src/modules/log"
 )
 
@@ -98,5 +99,10 @@ func (m *module) load() {
 
 	auth.Load(&auth.Module{
 		App: m.app,
+	})
+
+	balance.Load(&balance.Module{
+		App: m.app,
+		DB:  pgDB,
 	})
 }

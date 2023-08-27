@@ -12,6 +12,7 @@ import (
 	"hilmy.dev/store/src/libs/parser"
 	acc "hilmy.dev/store/src/modules/account/account_entity"
 	a "hilmy.dev/store/src/modules/auth/auth_entity"
+	balanceentity "hilmy.dev/store/src/modules/balance/balance_entity"
 	"hilmy.dev/store/src/modules/log"
 )
 
@@ -52,6 +53,28 @@ func (m *Module) signup(c *fiber.Ctx) error {
 		Role:     &accountRole,
 	})
 	if err != nil {
+		log.SaveLogService(c.OriginalURL(), err.Error(), true)
+		return c.Status(fiber.StatusInternalServerError).JSON(&contract.Response{
+			Error: &contract.Error{
+				Status:  fiber.ErrInternalServerError.Error(),
+				Message: err.Error(),
+			},
+		})
+	}
+	balanceAmount := 0
+	if _, err := m.createBalanceService(&balanceentity.BalanceModel{
+		UserID: accountDetailData.ID,
+		Amount: &balanceAmount,
+	}); err != nil {
+		if err := m.deleteAccountService(accountDetailData.ID); err != nil {
+			log.SaveLogService(c.OriginalURL(), err.Error(), true)
+			return c.Status(fiber.StatusInternalServerError).JSON(&contract.Response{
+				Error: &contract.Error{
+					Status:  fiber.ErrInternalServerError.Error(),
+					Message: err.Error(),
+				},
+			})
+		}
 		log.SaveLogService(c.OriginalURL(), err.Error(), true)
 		return c.Status(fiber.StatusInternalServerError).JSON(&contract.Response{
 			Error: &contract.Error{
