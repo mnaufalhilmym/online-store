@@ -75,7 +75,7 @@ func (*Module) getProductDetailService(id *uuid.UUID) (*p.ProductModel, error) {
 		},
 		IncludeTables: &[]pg.IncludeTables{
 			{
-				Query: "Product",
+				Query: "Category",
 			},
 		},
 		IsUnscoped: true,
