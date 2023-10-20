@@ -6,7 +6,7 @@ COPY . .
 RUN go vet -v ./src/
 RUN CGO_ENABLED=0 go build -v -o /go/bin/app ./src/
 
-FROM gcr.io/distroless/static-debian11
+FROM gcr.io/distroless/static-debian12
 WORKDIR /app
 COPY --from=build /go/bin/app /app
 CMD [ "/app/app" ]

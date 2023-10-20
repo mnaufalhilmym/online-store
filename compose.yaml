@@ -27,7 +27,7 @@ services:
 
   store-be:
     container_name: store-be
-    image: store:distroless-static-debian11
+    image: store:distroless-static-debian12
     restart: unless-stopped
     networks:
       - store-network
